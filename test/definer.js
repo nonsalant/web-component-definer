@@ -81,38 +81,21 @@ function processLocalPath(modulePath) {
     const currentPageURL = new URL(window.location.href);
 
     // Get the directory paths of both the current module and the current page
-    const fromPath = moduleURL.pathname.split('/').slice(0, -1).join('/'); // Module's directory path
+    const fromPath = moduleURL.pathname.split('/').slice(0, -1).join('/') || '/';
     const toPath = currentPageURL.pathname.split('/').slice(0, -1).join('/'); // Page's directory path
 
-    // console.log('fromPath:', fromPath);
-    // console.log('toPath:', toPath);
-
-    // Special case: If the module is at the root (like "/definer.js"), handle it
-    const fromParts = fromPath || '/'; // If fromPath is empty, set it to root "/"
     const toParts = toPath.split('/'); // Normal directory split for the page
 
-    console.log('fromParts:', fromParts);
-    console.log('toParts:', toParts);
-
     // If the paths are the same (module and page are in the same directory)
-    if (fromParts === toPath) {
+    if (fromPath === toPath) {
         return `./${modulePath}`;
-    }
-
-    // Find the first point of divergence between the two paths
-    let i = 0;
-    while (i < fromParts.length && i < toParts.length && fromParts[i] === toParts[i]) {
-        i++;
     }
 
     // Calculate how many levels to go up (if the module is deeper than the page)
     const relativePathParts = [];
-    // for (let j = fromParts.length - 1; j >= i; j--) {
-    //     relativePathParts.push('..');
-    // }
 
     // Append the remaining path segments of the current page
-    for (let j = i; j < toParts.length; j++) {
+    for (let j = 0; j < toParts.length; j++) {
         relativePathParts.push(toParts[j]);
     }
 
