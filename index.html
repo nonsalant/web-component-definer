@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Component Definer</title>
-    <script src="./web-component.js?file=my-component" type="module"></script>
-    <script src="./web-component.js?file=my-other-component" type="module"></script>
-    <script src="./web-component.js?define=renamed-component&file=my-component" type="module"></script>
+    <script type="module" src="./definer.js?load=
+        ./components/my-component.js,
+        ./components/my-other-component.js,
+        ./components/my-component.js:renamed-component,
+    "></script>
 </head>
 <body>
     <h1>Web Component Definer</h1>
