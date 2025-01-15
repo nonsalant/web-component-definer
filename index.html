@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Component Definer</title>
     <script type="module" src="./definer.js?load=
-        ./components/my-component.js,
-        ./components/my-other-component.js,
-        https://web-component-definer.netlify.app/my-component.js:renamed-component,
+        ./components/my-component.js::my-other-component,
+        ./components/my-other-component.js::my-component,
+        https://web-component-definer.netlify.app/my-component.js::renamed-component,
     "></script>
 </head>
 <body>
