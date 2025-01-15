@@ -82,23 +82,11 @@ function processLocalPath(modulePath) {
 
     // Get the directory paths of both the current module and the current page
     const fromPath = moduleURL.pathname.split('/').slice(0, -1).join('/') || '/';
-    const toPath = currentPageURL.pathname.split('/').slice(0, -1).join('/'); // Page's directory path
+    const toPath = currentPageURL.pathname.split('/').slice(0, -1).join('/');
 
-    const toParts = toPath.split('/'); // Normal directory split for the page
-
-    // If the paths are the same (module and page are in the same directory)
     if (fromPath === toPath) {
         return `./${modulePath}`;
     }
 
-    // Calculate how many levels to go up (if the module is deeper than the page)
-    const relativePathParts = [];
-
-    // Append the remaining path segments of the current page
-    for (let j = 0; j < toParts.length; j++) {
-        relativePathParts.push(toParts[j]);
-    }
-
-    // Return the final relative path by joining the parts with the modulePath
-    return `${relativePathParts.join('/')}/${modulePath}`;
+    return `${toPath}/${modulePath}`;
 }
