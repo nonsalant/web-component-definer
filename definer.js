@@ -41,7 +41,7 @@ items.forEach((item) => {
         }
     }).catch(err => { console.error(err); });
 
-});
+}); 
 
 // utils
 
