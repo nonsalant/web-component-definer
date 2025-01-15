@@ -81,41 +81,36 @@ function processLocalPath(modulePath) {
     const currentPageURL = new URL(window.location.href);
 
     // Get the directory paths of both the current module and the current page
-    const fromPath = moduleURL.pathname.split('/').slice(0, -1);  // Module's directory path as array
-    const toPath = currentPageURL.pathname.split('/').slice(0, -1);  // Page's directory path as array
+    const fromPath = moduleURL.pathname.split('/').slice(0, -1).join('/'); // Module's directory path
+    const toPath = currentPageURL.pathname.split('/').slice(0, -1).join('/'); // Page's directory path
+
+    console.log('fromPath:', fromPath);
+    console.log('toPath:', toPath);
 
     // Special case: If the module is at the root (like "/definer.js"), handle it
-    const fromParts = fromPath.length === 0 ? [''] : fromPath;  // If module is at root, treat it as ['']
-    const toParts = toPath;  // Page path is normal array
+    const fromParts = fromPath || '/'; // If fromPath is empty, set it to root "/"
+    const toParts = toPath.split('/'); // Normal directory split for the page
 
     // If the paths are the same (module and page are in the same directory)
-    if (fromParts.join('/') === toParts.join('/')) {
+    if (fromParts === toPath) {
         return `./${modulePath}`;
     }
 
-    // Calculate how many levels to go down from the root (for module at the root)
+    // Find the first point of divergence between the two paths
+    let i = 0;
+    while (i < fromParts.length && i < toParts.length && fromParts[i] === toParts[i]) {
+        i++;
+    }
+
+    // Calculate how many levels to go up (if the module is deeper than the page)
     const relativePathParts = [];
+    for (let j = fromParts.length - 1; j >= i; j--) {
+        relativePathParts.push('..');
+    }
 
-    // Handle the case where module is at the root and page is deeper in subfolders
-    if (fromParts.length === 1 && fromParts[0] === '') {
-        // Module is at the root, we need to go down to the subdirectories in the page path
-        relativePathParts.push(...toParts);
-    } else {
-        // Calculate how many levels to go up (if the module is deeper than the page)
-        let i = 0;
-        while (i < fromParts.length && i < toParts.length && fromParts[i] === toParts[i]) {
-            i++;
-        }
-
-        // Go up from the module path
-        for (let j = fromParts.length - 1; j >= i; j--) {
-            relativePathParts.push('..');
-        }
-
-        // Add the remaining path segments of the page path
-        for (let j = i; j < toParts.length; j++) {
-            relativePathParts.push(toParts[j]);
-        }
+    // Append the remaining path segments of the current page
+    for (let j = i; j < toParts.length; j++) {
+        relativePathParts.push(toParts[j]);
     }
 
     // Return the final relative path by joining the parts with the modulePath
