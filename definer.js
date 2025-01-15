@@ -7,14 +7,17 @@ items.forEach((item) => {
     const filename = extractFilename(modulePath);
     const webComponentClassName = toPascalCase(filename);
 
-    import(modulePath).then((module) => {
+    const isExternal = modulePath.startsWith('http://') || modulePath.startsWith('https://');
+    const importPath = isExternal ? modulePath : new URL(modulePath, import.meta.url).href;
+
+    import(importPath).then((module) => {
         // Dynamically access the class using the webComponentClassName variable
         const WebComponentClass = module[webComponentClassName];
 
         // Modified from: https://til.jakelazaroff.com/html/define-a-custom-element/
         class WebComponent extends WebComponentClass {
             static tag = filename;
-        
+
             static {
                 const tag = definedName || this.tag;
                 if (tag !== "false") this.define(tag);
@@ -33,7 +36,7 @@ items.forEach((item) => {
             }
         }
     }).catch(err => { console.error(err); });
-    
+
 });
 
 // utils
