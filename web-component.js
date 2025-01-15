@@ -1,6 +1,7 @@
 const file = new URL(import.meta.url).searchParams.get("file");
-const definedName = new URL(import.meta.url).searchParams.get("define");
 const modulePath = `./${file}.js`;
+
+const definedName = new URL(import.meta.url).searchParams.get("define");
 const webComponentClassName = toPascalCase(file);
 
 import(modulePath).then((module) => {
